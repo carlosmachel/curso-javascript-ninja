@@ -18,8 +18,8 @@
   */
   console.log( 'Limpando CPFs:' );
 
-  function cleanCpf( cpf ) {
-    var regex = /[^\d]/g;
+  function cleanCPF( cpf ) {
+    var regex = /[^\d]/g;  // var regex = /\D/g
     return cpf.replace(regex, '');
   }
 
@@ -31,7 +31,7 @@
   ];
 
   var cleanCpfs = cpfs.map(function(value, index) {
-    var cleanedCpf = cleanCpf(value);
+    var cleanedCpf = cleanCPF(value);
     console.log(cleanedCpf);
     return cleanedCpf;
   });
@@ -43,9 +43,7 @@
   */
   console.log( '\nFormatando CPFs corretamente:' );
   cleanCpfs.forEach(function(value, index) {
-    console.log(value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, function(regex, val1, val2, val3, val4) {
-      return val1 + '.' + val2 + '.' + val3 + '-'  + val4;
-    }));
+    console.log(value.replace( /(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
   });
 
   /*
@@ -60,7 +58,7 @@
   ["junho", "julho"]
   */
   console.log( '\nMatch com as palavras "junho" ou "julho" para a frase "Os meses de janeiro, junho e julho começam com a letra j.":' );
-  console.log("Os meses de janeiro, junho e julho começam com a letra j.".match(/j\w{3}o/g))
+  console.log("Os meses de janeiro, junho e julho começam com a letra j.".match(/ju[nl]ho/g))
 
   /*
   Crie uma expressão regular que faça o match com a abertura de uma tag
@@ -114,10 +112,11 @@
   */
   console.log( '\nFazer replace dos textos das tags:' );
   var markup3 = '<h1>Título da página</h1><p>Este é um parágrafo</p><footer>Rodapé</footer>';
-  var regex3 = /(<(\w+)>)([\s\S]+?)(<\/\w+>)/g;
-
-  console.log(markup3.replace(regex3, function(regex, tagOpen, tagName, innerHtml, closeTag) {
-    return tagOpen + 'O texto dentro da tag "' + tagName + '" é "' + innerHtml + '"' + closeTag + '\n';
-  }));
+  /*
+    a forma como fiz antes
+    resolve pra esse exercício,
+    mas não para outras situações */
+  var regex3 = /<(\w+)>([^<]+)<\/\w+>/g;
+  console.log(markup3.replace(regex3, '<$1>O texto dentro da tag "$1" é "$2"</$1>\n'));
 
 })();
