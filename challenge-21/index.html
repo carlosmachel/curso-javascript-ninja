@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Challenge 21</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #eaeaea;
+      height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+    }
+
+    .v-wrap{
+    height: 100%;
+    white-space: nowrap;
+    text-align: center;
+    }
+
+    .v-wrap:before{
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      width: 0;
+      /* adjust for white space between pseudo element and next sibling */
+      margin-right: -.25em;
+      /* stretch line height */
+      height: 100%;
+    }
+    .v-box{
+        display: inline-block;
+        vertical-align: middle;
+        white-space: normal;
+    }
+
+    input {
+      width:53px;
+      height: 30px;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px;
+      text-transform: uppercase;
+      font-weight: bolder;
+      background: #fff;
+      color: black;
+    }
+
+    .start {
+      border: 1px solid cornflowerblue;
+    }
+    .start:hover {
+      background:cornflowerblue;
+    }
+
+    .stop {
+      border: 1px solid darkcyan;
+    }
+    .stop:hover {
+      background:darkcyan;
+    }
+
+    .reset {
+      border: 1px solid brown;
+    }
+    .reset:hover {
+      background: brown;
+    }
+
+    button:hover {
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div class="v-wrap">
+    <div class="v-box">
+        <input  data-js="cronometer" type="text" value="0" disabled="disabled">
+        <div>
+          <button class="start" data-js="start">Start</button>
+          <button class="stop" data-js="stop">Stop</button>
+          <button class="reset" data-js="reset">Reset</button>
+          <script src="challenge-21.js"></script>
+        </div>
+    </div>
+  </div>
+</body>
+</html>
