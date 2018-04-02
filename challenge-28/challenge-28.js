@@ -1,3 +1,5 @@
+(function(DOM){
+  'use strict';
   /*
   No HTML:
   - Crie um formulário com um input de texto que receberá um CEP e um botão
@@ -25,3 +27,111 @@
   - Utilize a lib DOM criada anteriormente para facilitar a manipulação e
   adicionar as informações em tela.
   */
+
+  function app() {
+    var $formCep = new DOM('[data-js="form-cep"]');
+    var $inputCep = new DOM('[data-js="input-cep"]');
+    var $fields = new DOM('[data-js="search-result"]');
+    var $status = new DOM('[data-js="status"]');
+    var ajax = new XMLHttpRequest();
+    $formCep.on('submit', handleSubmitFormCep);
+
+    function handleSubmitFormCep(event) {
+      event.preventDefault();
+      searchCep();
+    }
+
+    function searchCep() {
+      if(!isCepValid()) {
+        getMessage('error');
+        return;
+      }
+
+      var url = getUrl();
+      ajax.open('GET', url);
+      ajax.send(null);
+      getMessage('loading');
+      ajax.addEventListener('readystatechange', handleReadyStateChange);
+    }
+
+    function getUrl() {
+      return replaceCep('https://viacep.com.br/ws/[CEP]/json/');
+    }
+
+    function sanitizeCep(){
+      return $inputCep.get()[0].value.replace(/\D/g, '');
+    }
+
+    function handleReadyStateChange() {
+      if( isRequestOk() ) {
+        getMessage('ok');
+        populateCepFields();
+      }
+    }
+
+
+    function isRequestOk() {
+      return ajax.readyState === 4 && ajax.status === 200;
+    }
+
+    function populateCepFields () {
+      var data = parseData();
+      if(!data || data.erro) {
+        getMessage('error');
+        data = clearData();
+      }
+
+      $fields.forEach(function(item){
+        item.textContent = data[item.getAttribute('data-js-name')];
+      });
+    }
+
+    function clearData() {
+      return {
+        logradouro: '-',
+        bairro: '-',
+        uf: '-',
+        localidade: '-',
+        cep: '-'
+      }
+    }
+
+    function parseData(){
+      var result;
+
+      try {
+        result = JSON.parse(ajax.responseText);
+      }
+      catch(e) {
+        result = null;
+      }
+      return result;
+    }
+
+    function getMessage(type) {
+      var messages = {
+        loading: replaceCep('Buscando informações para o CEP [CEP]...'),
+        ok: replaceCep('Endereço referente ao CEP [CEP]:'),
+        error: replaceCep('Não encontramos o endereço para o CEP [CEP].')
+      };
+      $status.get()[0].textContent = messages[type];
+    }
+
+    function replaceCep(message) {
+      return message.replace('[CEP]', sanitizeCep());
+    }
+
+    function isCepValid() {
+      return sanitizeCep().length === 8;
+    }
+
+    return {
+      getMessage: getMessage,
+      replaceCep: replaceCep
+    };
+  }
+
+  window.app = app;
+  app();
+
+})(window.DOM);
